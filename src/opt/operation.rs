@@ -4,7 +4,6 @@ use ndarray::Array3;
 use ndarray_stats::QuantileExt;
 
 /// Possible operation enumeration.
-#[derive(Clone)]
 pub enum Operation {
     /// Generate a zero cube of the giver resolution.
     Zero([usize; 3]),
