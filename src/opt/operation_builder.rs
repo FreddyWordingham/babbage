@@ -43,28 +43,28 @@ impl Build for OperationBuilder {
             Self::Sum(data) => {
                 let mut cubes = Vec::with_capacity(data.len());
                 for d in data.iter() {
-                    cubes.push(Array3::load(&in_dir.join(d)).expect("Failed to load datacube."));
+                    cubes.push(Array3::load(&in_dir.join(d))?);
                 }
                 Self::Inst::Sum(cubes)
             }
             Self::Add(data, x) => {
-                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                let cube = Array3::load(&in_dir.join(data))?;
                 Self::Inst::Add(cube, x)
             }
             Self::Sub(data, x) => {
-                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                let cube = Array3::load(&in_dir.join(data))?;
                 Self::Inst::Sub(cube, x)
             }
             Self::Mult(data, x) => {
-                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                let cube = Array3::load(&in_dir.join(data))?;
                 Self::Inst::Mult(cube, x)
             }
             Self::Div(data, x) => {
-                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                let cube = Array3::load(&in_dir.join(data))?;
                 Self::Inst::Div(cube, x)
             }
             Self::Norm(data) => {
-                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                let cube = Array3::load(&in_dir.join(data))?;
                 Self::Inst::Norm(cube)
             }
         })
