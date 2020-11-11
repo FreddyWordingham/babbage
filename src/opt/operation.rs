@@ -11,6 +11,8 @@ pub enum Operation {
     Zero([usize; 3]),
     /// Generate a unit cube of the giver resolution.
     Unit([usize; 3]),
+    /// Add two cubes together.
+    Add(Array3<f64>, Array3<f64>),
 }
 
 impl Operation {
@@ -18,9 +20,10 @@ impl Operation {
     #[inline]
     #[must_use]
     pub fn run(&self) -> Array3<f64> {
-        match *self {
-            Self::Zero(res) => (Array3::zeros(res)),
-            Self::Unit(res) => (Array3::zeros(res) + 1.0),
+        match self {
+            Self::Zero(res) => (Array3::zeros(*res)),
+            Self::Unit(res) => (Array3::zeros(*res) + 1.0),
+            Self::Add(lhs, rhs) => lhs + rhs,
         }
     }
 }
