@@ -13,6 +13,8 @@ pub enum Operation {
     Unit([usize; 3]),
     /// Add two cubes together.
     Add(Array3<f64>, Array3<f64>),
+    /// Subtract the rhs from the lhs.
+    Sub(Array3<f64>, Array3<f64>),
 }
 
 impl Operation {
@@ -24,6 +26,7 @@ impl Operation {
             Self::Zero(res) => (Array3::zeros(*res)),
             Self::Unit(res) => (Array3::zeros(*res) + 1.0),
             Self::Add(lhs, rhs) => lhs + rhs,
+            Self::Sub(lhs, rhs) => lhs - rhs,
         }
     }
 }

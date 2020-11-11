@@ -19,6 +19,8 @@ pub enum OperationBuilder {
     Unit([usize; 3]),
     /// Add two cubes together.
     Add(PathBuf, PathBuf),
+    /// Subtract the rhs from the lhs.
+    Sub(PathBuf, PathBuf),
 }
 
 impl Build for OperationBuilder {
@@ -34,6 +36,11 @@ impl Build for OperationBuilder {
                 let l = Array3::load(&in_dir.join(lhs)).expect("Failed to load lhs value array.");
                 let r = Array3::load(&in_dir.join(rhs)).expect("Failed to load rhs value array.");
                 Self::Inst::Add(l, r)
+            }
+            Self::Sub(lhs, rhs) => {
+                let l = Array3::load(&in_dir.join(lhs)).expect("Failed to load lhs value array.");
+                let r = Array3::load(&in_dir.join(rhs)).expect("Failed to load rhs value array.");
+                Self::Inst::Sub(l, r)
             }
         })
     }
