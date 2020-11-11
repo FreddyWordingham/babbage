@@ -17,10 +17,18 @@ pub enum OperationBuilder {
     Zero([usize; 3]),
     /// Generate a unit cube of the giver resolution.
     Unit([usize; 3]),
-    /// Add two cubes together.
-    Add(PathBuf, PathBuf),
-    /// Subtract the rhs from the lhs.
-    Sub(PathBuf, PathBuf),
+    /// Sum cubes together.
+    Sum(Vec<PathBuf>),
+    /// Add a value to the data cube.
+    Add(PathBuf, f64),
+    /// Subtract a value from the data cube.
+    Sub(PathBuf, f64),
+    /// Multiply the datacube by the value.
+    Mult(PathBuf, f64),
+    /// Divide the datacube by the value.
+    Div(PathBuf, f64),
+    /// Normalise a data cube.
+    Norm(PathBuf),
 }
 
 impl Build for OperationBuilder {
@@ -32,15 +40,32 @@ impl Build for OperationBuilder {
         Ok(match self {
             Self::Zero(res) => Self::Inst::Zero(res),
             Self::Unit(res) => Self::Inst::Unit(res),
-            Self::Add(lhs, rhs) => {
-                let l = Array3::load(&in_dir.join(lhs)).expect("Failed to load lhs value array.");
-                let r = Array3::load(&in_dir.join(rhs)).expect("Failed to load rhs value array.");
-                Self::Inst::Add(l, r)
+            Self::Sum(data) => {
+                let mut cubes = Vec::with_capacity(data.len());
+                for d in data.iter() {
+                    cubes.push(Array3::load(&in_dir.join(d)).expect("Failed to load datacube."));
+                }
+                Self::Inst::Sum(cubes)
             }
-            Self::Sub(lhs, rhs) => {
-                let l = Array3::load(&in_dir.join(lhs)).expect("Failed to load lhs value array.");
-                let r = Array3::load(&in_dir.join(rhs)).expect("Failed to load rhs value array.");
-                Self::Inst::Sub(l, r)
+            Self::Add(data, x) => {
+                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                Self::Inst::Add(cube, x)
+            }
+            Self::Sub(data, x) => {
+                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                Self::Inst::Sub(cube, x)
+            }
+            Self::Mult(data, x) => {
+                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                Self::Inst::Mult(cube, x)
+            }
+            Self::Div(data, x) => {
+                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                Self::Inst::Div(cube, x)
+            }
+            Self::Norm(data) => {
+                let cube = Array3::load(&in_dir.join(data)).expect("Failed to load datacube.");
+                Self::Inst::Norm(cube)
             }
         })
     }
