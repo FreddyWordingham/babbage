@@ -25,24 +25,25 @@ pub enum Operation {
 
 impl Operation {
     /// Perform the operation.
+    #[allow(clippy::expect_used)]
     #[inline]
     #[must_use]
     pub fn run(&self) -> Array3<f64> {
-        match self {
-            Self::Zero(res) => (Array3::zeros(*res)),
-            Self::Unit(res) => (Array3::zeros(*res) + 1.0),
-            Self::Sum(data) => {
+        match *self {
+            Self::Zero(res) => (Array3::zeros(res)),
+            Self::Unit(res) => (Array3::zeros(res) + 1.0),
+            Self::Sum(ref data) => {
                 let mut base = data[0].clone();
                 for d in data.iter().skip(1) {
                     base += d;
                 }
                 base
             }
-            Self::Add(data, x) => data + *x,
-            Self::Sub(data, x) => data - *x,
-            Self::Mult(data, x) => data * *x,
-            Self::Div(data, x) => data / *x,
-            Self::Norm(data) => {
+            Self::Add(ref data, x) => data + x,
+            Self::Sub(ref data, x) => data - x,
+            Self::Mult(ref data, x) => data * x,
+            Self::Div(ref data, x) => data / x,
+            Self::Norm(ref data) => {
                 let max = *data.max().expect("Failed to determine maximal value.");
                 data / max
             }

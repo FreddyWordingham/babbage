@@ -42,7 +42,7 @@ impl Build for OperationBuilder {
             Self::Unit(res) => Self::Inst::Unit(res),
             Self::Sum(data) => {
                 let mut cubes = Vec::with_capacity(data.len());
-                for d in data.iter() {
+                for d in &data {
                     cubes.push(Array3::load(&in_dir.join(d))?);
                 }
                 Self::Inst::Sum(cubes)

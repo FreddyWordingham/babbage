@@ -71,6 +71,7 @@ fn input(term_width: usize, in_dir: &Path, params_path: &Path) -> Parameters {
 }
 
 /// Build instances.
+#[allow(clippy::let_and_return)]
 #[allow(clippy::type_complexity)]
 fn build(term_width: usize, in_dir: &Path, params: Parameters) -> Operation {
     banner::section("Building", term_width);
