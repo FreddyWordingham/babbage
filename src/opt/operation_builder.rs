@@ -9,6 +9,8 @@ use std::path::Path;
 #[input]
 #[derive(Clone)]
 pub enum OperationBuilder {
+    /// Generate a zero cube of the giver resolution.
+    Zero([usize; 3]),
     /// Generate a unit cube of the giver resolution.
     Unit([usize; 3]),
 }
@@ -20,6 +22,7 @@ impl Build for OperationBuilder {
     #[inline]
     fn build(self, _in_dir: &Path) -> Result<Self::Inst, Error> {
         Ok(match self {
+            Self::Zero(res) => Self::Inst::Zero(res),
             Self::Unit(res) => Self::Inst::Unit(res),
         })
     }
