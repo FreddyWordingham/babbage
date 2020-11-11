@@ -2,11 +2,11 @@
 
 use arctk::{
     args,
-    file::Load,
+    file::{Build, Load, Save},
     util::{banner, dir},
 };
 use arctk_attr::input;
-use babbage::opt::OperationBuilder;
+use babbage::opt::{Operation, OperationBuilder};
 use std::{
     env::current_dir,
     path::{Path, PathBuf},
@@ -24,9 +24,19 @@ pub fn main() {
     let term_width = arctk::util::term::width().unwrap_or(80);
     banner::title("BABBAGE", term_width);
 
-    let (params_path, in_dir, _out_dir) = init(term_width);
+    let (params_path, in_dir, out_dir) = init(term_width);
 
-    let _params = input(term_width, &in_dir, &params_path);
+    let params = input(term_width, &in_dir, &params_path);
+
+    let op = build(term_width, &in_dir, params);
+
+    banner::section("Operation", term_width);
+    let output = op.run();
+
+    banner::section("Saving", term_width);
+    output
+        .save(&out_dir.join("out.nc"))
+        .expect("Failed to save output.");
 
     banner::section("Finished", term_width);
 }
@@ -58,4 +68,14 @@ fn input(term_width: usize, in_dir: &Path, params_path: &Path) -> Parameters {
     let path = in_dir.join(params_path);
 
     Parameters::load(&path).expect("Failed to load parameters file.")
+}
+
+/// Build instances.
+#[allow(clippy::type_complexity)]
+fn build(term_width: usize, in_dir: &Path, params: Parameters) -> Operation {
+    banner::section("Building", term_width);
+    banner::sub_section("Operation", term_width);
+    let op = params.op.build(in_dir).expect("Failed to build operation.");
+
+    op
 }
