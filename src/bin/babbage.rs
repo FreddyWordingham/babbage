@@ -6,6 +6,7 @@ use arctk::{
     util::{banner, dir},
 };
 use arctk_attr::input;
+use babbage::opt::OperationBuilder;
 use std::{
     env::current_dir,
     path::{Path, PathBuf},
@@ -13,7 +14,10 @@ use std::{
 
 // Input parameters.
 #[input]
-struct Parameters {}
+struct Parameters {
+    /// Operation to perform.
+    op: OperationBuilder,
+}
 
 /// Main function.
 pub fn main() {
